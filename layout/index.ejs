@@ -1,0 +1,9 @@
+<main class="content">
+    <div id="home-sections">
+        <%- partial('./home') %>
+    </div>
+</main>
+
+<% if (page.total > 1) { %>
+<%- partial('_partial/paging') %>
+<% } %>
