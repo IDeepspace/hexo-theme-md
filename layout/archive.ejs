@@ -1,88 +1,78 @@
 <main class="content" style="margin-top: 100px;">
 
     <% if (theme.postCalendar) { %>
-    <%- partial('_widget/post-calendar') %>
+        <%- partial('_widget/post-calendar') %>
     <% } %>
 
     <%
-
     // init year and month variable.
     let year = '1970';
     let month = '1970-01';
     %>
 
-    <div id="cd-timeline" class="container">
-        <% page.posts.each(function(post) { %>
-        <div class="cd-timeline-block">
-
-            <%# year. %>
-            <% if (date(post.date, 'YYYY') != year) { %>
-            <% year = date(post.date, 'YYYY'); %>
-            <div class="cd-timeline-img year" data-aos="zoom-in-up">
-                <a href="<%- url_for('/archives/' + year) %>"><%- year %></a>
-            </div>
-            <% } %>
-
-            <%# month. %>
-            <% if (date(post.date, 'YYYY-MM') != month) { %>
-            <%
-                month = date(post.date, 'YYYY-MM');
-                var m = date(post.date, 'MM')
-            %>
-            <div class="cd-timeline-img month" data-aos="zoom-in-up">
-                <a href="<%- url_for('/archives/' + year + '/' + m) %>"><%- m %></a>
-            </div>
-            <% } %>
-
-            <%# every day posts. %>
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span><%- date(post.date, 'YYYY-MM-DD').substring(8, 10) %></span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="<%- url_for(post.path) %>" class="archive-post-title"><%- post.title %></a>
-                        <div class="card-content article-content">
-                            <!--<div class="summary"><%- strip_html(post.content).substring(0, 80) %>...</div>-->
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="fa fa-clock-o fa-fw icon-date"></i><%= date(post.date, config.date_format) %>
-                                </span>
-                                <span class="publish-author">
-                                    <% if (post.categories && post.categories.length > 0) { %>
-                                    <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                    <% post.categories.forEach(category => { %>
-                                    <a href="<%- url_for(category.path) %>" class="post-category" target="_blank">
-                                    <%- category.name %>
-                                    </a>
-                                    <% }); %>
-                                    <% } else if (post.author && post.author.length > 0) { %>
-                                    <i class="fa fa-user fa-fw"></i>
-                                    <%- post.author %>
-                                    <% } else { %>
-                                    <i class="fa fa-user fa-fw"></i>
-                                    <%- config.author %>
-                                    <% } %>
-                                </span>
-                            </div>
-                        </div>
-
-                        <% if (post.tags && post.tags.length) { %>
-                        <div class="card-action article-tags">
-                            <% post.tags.forEach(tag => { %>
-                            <a href="<%- url_for(tag.path) %>"><span class="chip bg-color"><%= tag.name %></span></a>
-                            <% }); %>
-                        </div>
-                        <% } %>
+    <div class="container">
+        <div class="card timeline-wrapper">
+            <div class="timeline">
+                <span class="archive-move-on"></span>
+                <span class="archive-page-counter">
+                    <% if(!is_archive()){ %>
+                        <span>当前位于 <%- page.current %>/<%- page.total -%> 页</span>
+                    <% }else{ %>
+                        <span>Wow! 一共有 <%- site.posts.length %> 篇文章</span>
+                    <% } %>
+                </span>
+                <%
+                const getPostYear = psg => psg.date.year();
+                let prevYear = getPostYear(page.posts.data[0]), nowYear = null;
+                %>
+                <% if(!is_archive()){ %>
+                    <div class="collection-title">
+                        <h2>
+                            <% if(is_category()) { %>
+                                <span>分类 : <%- page.category %></span>
+                            <% }else if(is_tag()){ %>
+                                <span>标签 : <%- page.tag %></span>
+                            <% } %>
+                        </h2>
                     </div>
-                </div>
-            </article>
+                <% } else { %>
+                    <div class="collection-title">
+                        <h2>
+                            <span><%- prevYear %></span>
+                        </h2>
+                    </div>
+                <% } %>
+                <% for(let psg of page.posts.data){ %>
+                    <%
+                        nowYear = getPostYear(psg);
+                    if(nowYear !== prevYear){
+                        prevYear = nowYear;
+                    %>
+                    <div class="collection-title">
+                        <h2>
+                            <span><%- nowYear %></span>
+                        </h2>
+                    </div>
+                    <% } %>
+                    <article class="posts-collapse">
+                        <header>
+                            <h2>
+                                <a href="<%- url_for(psg.path) %>">
+                                    <span><%- psg.title %></span>
+                                </a>
+                            </h2>
+                            <div class="post-meta">
+                                <%- psg.date.format("MM-DD") %>
+                            </div>
+                        </header>
+                    </article>
+                <% } %>
+            </div>
         </div>
-        <% }); %>
     </div>
 
 </main>
 
 <% if (page.total > 1) { %>
-<%- partial('_partial/paging') %>
+    <%- partial('_partial/paging') %>
 <% } %>
