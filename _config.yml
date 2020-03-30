@@ -40,7 +40,7 @@ profile:
 
 # 在 "关于" 页面配置 "我的项目" 信息
 myProjects:
-  enable: true
+  enable: false
   data:
     hexo-theme-md:
       icon: fa-umbrella
@@ -50,7 +50,7 @@ myProjects:
 
 # 在 "关于" 页面配置 "我的技能" 信息
 mySkills:
-  enable: true
+  enable: false
   data:
     Java:
       background: 'linear-gradient(to right, #FF0066 0%, #FF00CC 100%)'
@@ -110,8 +110,8 @@ gitment:
 
 # Disqus评论模块的配置，默认为不激活
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: https-togoblog-cn
 
 # Livere 来必力评论模块的配置，默认为不激活
 livere:
@@ -126,7 +126,7 @@ githubLink:
 
 # 无文章特色图片时需要显示的文章特色图片.
 featureImages:
-  - /medias/featureimages/winter.jpg
+  - /medias/featureimages/lighted.jpg
 
 postBackgroundImage:
-  - /medias/featureimages/winter.jpg
+  - /medias/featureimages/lighted.jpg
